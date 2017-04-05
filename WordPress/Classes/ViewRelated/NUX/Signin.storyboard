@@ -280,7 +280,7 @@
                                             <color key="titleColor" red="1" green="1" blue="1" alpha="1" colorSpace="custom" customColorSpace="sRGB"/>
                                         </state>
                                         <connections>
-                                            <segue destination="hp1-uh-OnP" kind="show" id="2aw-tL-W5T"/>
+                                            <segue destination="lmD-c6-SLs" kind="show" id="jWZ-k8-lXs"/>
                                         </connections>
                                     </button>
                                 </subviews>
@@ -313,7 +313,7 @@
                 </viewController>
                 <placeholder placeholderIdentifier="IBFirstResponder" id="wWl-qb-1Yp" userLabel="First Responder" sceneMemberID="firstResponder"/>
             </objects>
-            <point key="canvasLocation" x="262" y="253"/>
+            <point key="canvasLocation" x="284" y="252"/>
         </scene>
         <!--Signup View Controller-->
         <scene sceneID="w7c-Xj-AH8">
@@ -1063,6 +1063,7 @@
                         <outlet property="instructionLabel" destination="GNM-JR-DEh" id="EyX-zB-B8J"/>
                         <outlet property="siteURLField" destination="ces-2W-SRN" id="QCO-B0-bfh"/>
                         <outlet property="submitButton" destination="F56-2S-eLR" id="1WD-2I-q1q"/>
+                        <segue destination="fwZ-QE-5et" kind="show" identifier="wpComNext" id="DIs-VL-CDn"/>
                     </connections>
                 </viewController>
                 <placeholder placeholderIdentifier="IBFirstResponder" id="UuW-0h-YMh" userLabel="First Responder" sceneMemberID="firstResponder"/>
@@ -2075,7 +2076,7 @@
     <inferredMetricsTieBreakers>
         <segue reference="doZ-HT-Y0R"/>
         <segue reference="kZV-1E-vsW"/>
-        <segue reference="FUp-v0-vkX"/>
+        <segue reference="DIs-VL-CDn"/>
         <segue reference="Ncm-cS-fDT"/>
     </inferredMetricsTieBreakers>
 </document>

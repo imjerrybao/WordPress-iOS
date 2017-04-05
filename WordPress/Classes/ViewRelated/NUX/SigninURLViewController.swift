@@ -161,14 +161,16 @@ import WordPressShared
         loginFields.xmlrpcUrl = url.absoluteString
 
         let controller: UIViewController
-        if loginFields.siteUrl.contains("wordpress.com/xmlrpc.php") {
+        if url.absoluteString.contains("wordpress.com/xmlrpc.php") {
             // Show WordPress.com flow
-            controller = SigninWPComViewController.controller(loginFields)
+//            controller = SigninWPComViewController.controller(loginFields)
+            self.performSegue(withIdentifier: "wpComNext", sender: self)
         } else {
             // Show selfhosted flow
             controller = SigninSelfHostedViewController.controller(loginFields)
+            navigationController?.pushViewController(controller, animated: true)
         }
-        navigationController?.pushViewController(controller, animated: true)
+        
     }
 
 

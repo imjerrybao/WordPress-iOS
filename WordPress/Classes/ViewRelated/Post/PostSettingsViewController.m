@@ -71,6 +71,7 @@ UIPopoverControllerDelegate, WPMediaPickerViewControllerDelegate, PostCategories
 @property (nonatomic, assign) BOOL isUploadingMedia;
 @property (nonatomic, strong) NSProgress *featuredImageProgress;
 @property (nonatomic, strong) WPAndDeviceMediaLibraryDataSource *mediaDataSource;
+@property (nonatomic, strong) WPNavigationMediaPickerViewController *mediaPicker;
 @property (nonatomic, strong) NSArray *publicizeConnections;
 
 @property (nonatomic, strong) PostGeolocationCell *postGeoLocationCell;
@@ -1233,6 +1234,9 @@ UIPopoverControllerDelegate, WPMediaPickerViewControllerDelegate, PostCategories
     picker.allowMultipleSelection = NO;
     picker.showMostRecentFirst = YES;
     picker.modalPresentationStyle = UIModalPresentationFormSheet;
+
+    self.mediaPicker = picker;
+
     [self presentViewController:picker animated:YES completion:nil];
 }
 
@@ -1454,10 +1458,36 @@ UIPopoverControllerDelegate, WPMediaPickerViewControllerDelegate, PostCategories
     NSIndexPath *featureImageCellPath = [NSIndexPath indexPathForRow:0 inSection:[self.sections indexOfObject:@(PostSettingsSectionFeaturedImage)]];
     [self.tableView reloadRowsAtIndexPaths:@[featureImageCellPath]
                           withRowAnimation:UITableViewRowAnimationFade];
+
+    self.mediaPicker = nil;
 }
 
 - (void)mediaPickerControllerDidCancel:(WPMediaPickerViewController *)picker {
     [self.navigationController dismissViewControllerAnimated:YES completion:nil];
+
+    self.mediaPicker = nil;
+}
+
+- (void)mediaPickerController:(WPMediaPickerViewController *)picker
+     didFailLoadingDataSource:(id<WPMediaCollectionDataSource>)dataSource
+                    withError:(NSError *)error
+{
+    if ([dataSource isKindOfClass:[WPAndDeviceMediaLibraryDataSource class]]) {
+        WPAndDeviceMediaLibraryDataSource *source = (WPAndDeviceMediaLibraryDataSource *)dataSource;
+
+        if (source.numberOfAssets == 0 && source.dataSourceType == MediaPickerDataSourceTypeMediaLibrary) {
+            source.dataSourceType = MediaPickerDataSourceTypeDevice;
+
+            id<WPMediaGroup> group = [source selectedGroup];
+            [self.mediaPicker setGroup:group];
+
+            return;
+        }
+    }
+
+    [self.navigationController dismissViewControllerAnimated:YES completion:nil];
+
+    self.mediaPicker = nil;
 }
 
 #pragma mark - PostCategoriesViewControllerDelegate

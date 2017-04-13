@@ -63,6 +63,9 @@ class GravatarPickerViewController: UIViewController, WPMediaPickerViewControlle
         onCompletion?(nil)
     }
 
+    func mediaPickerController(_ picker: WPMediaPickerViewController, didFailLoading dataSource: WPMediaCollectionDataSource?, withError error: Error?) {
+        onCompletion?(nil)
+    }
 
     // MARK: - Private Methods
 

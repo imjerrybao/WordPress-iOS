@@ -48,7 +48,7 @@ abstract_target 'WordPress_Base' do
     pod 'Gridicons', '0.5'
     pod 'NSObject-SafeExpectations', '0.0.2'
     pod 'NSURL+IDN', '0.3'
-    pod 'WPMediaPicker', '0.15'
+    pod 'WPMediaPicker', :git => 'https://github.com/wordpress-mobile/MediaPicker-iOS.git', :branch => 'fix/media-library-load-failure'
     pod 'WordPress-iOS-Editor', '1.9.0'
     pod 'WordPressCom-Analytics-iOS', '0.1.25'
     pod 'WordPress-Aztec-iOS', '0.5a8'

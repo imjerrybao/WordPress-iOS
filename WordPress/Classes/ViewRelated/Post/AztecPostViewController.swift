@@ -1947,6 +1947,11 @@ extension AztecPostViewController: WPMediaPickerViewControllerDelegate {
         richTextView.becomeFirstResponder()
     }
 
+    func mediaPickerController(_ picker: WPMediaPickerViewController, didFailLoading dataSource: WPMediaCollectionDataSource?, withError error: Error?) {
+        dismiss(animated: true, completion: nil)
+        richTextView.becomeFirstResponder()
+    }
+
     func mediaPickerController(_ picker: WPMediaPickerViewController, didFinishPickingAssets assets: [Any]) {
         dismiss(animated: true, completion: nil)
         richTextView.becomeFirstResponder()

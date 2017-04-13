@@ -1156,6 +1156,11 @@ static void *ProgressObserverContext = &ProgressObserverContext;
     [self dismissViewControllerAnimated:YES completion:nil];
 }
 
+- (void)mediaPickerController:(WPMediaPickerViewController *)picker didFailLoadingDataSource:(id<WPMediaCollectionDataSource>)dataSource withError:(NSError *)error
+{
+    [self dismissViewControllerAnimated:YES completion:nil];
+}
+
 #pragma mark - KVO
 
 - (void)observeValueForKeyPath:(NSString *)keyPath

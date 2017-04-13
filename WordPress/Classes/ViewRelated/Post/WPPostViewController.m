@@ -2228,6 +2228,13 @@ EditImageDetailsViewControllerDelegate
     }
 }
 
+- (void)mediaPickerController:(WPMediaPickerViewController *)picker
+     didFailLoadingDataSource:(id<WPMediaCollectionDataSource>)dataSource
+                    withError:(NSError *)error
+{
+    [self mediaPickerControllerDidCancel:picker];
+}
+
 - (BOOL)mediaPickerController:(WPMediaPickerViewController *)picker shouldSelectAsset:(id<WPMediaAsset>)mediaAsset
 {
     if ([mediaAsset isKindOfClass:[Media class]]){

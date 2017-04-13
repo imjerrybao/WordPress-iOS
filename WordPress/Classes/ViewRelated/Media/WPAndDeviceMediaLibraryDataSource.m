@@ -171,18 +171,7 @@
 - (void)loadDataWithSuccess:(WPMediaSuccessBlock)successBlock
                     failure:(WPMediaFailureBlock)failureBlock
 {
-    [self.currentDataSource loadDataWithSuccess:successBlock failure:^(NSError *error) {
-        if ([error.domain isEqualToString:WPMediaPickerErrorDomain] && error.code == WPMediaErrorCodePermissionsFailed) {
-            if (self.currentDataSource == self.deviceLibraryDataSource) {                
-                self.currentDataSource = self.mediaLibraryDataSource;
-                [self loadDataWithSuccess:successBlock failure:failureBlock];
-                return;
-            }
-        }
-        if (failureBlock) {
-            failureBlock(error);
-        }
-    }];
+    [self.currentDataSource loadDataWithSuccess:successBlock failure:failureBlock];
 }
 
 - (void)addImage:(UIImage *)image metadata:(NSDictionary *)metadata completionBlock:(WPMediaAddedBlock)completionBlock

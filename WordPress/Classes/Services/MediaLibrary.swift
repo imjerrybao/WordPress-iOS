@@ -34,6 +34,13 @@ open class MediaLibrary: LocalCoreDataService {
         }
     }
 
+    /// Creates a Media object with a UIImage, asynchronously.
+    ///
+    /// The UIImage is expected to be a JPEG, PNG, or other 'normal' image.
+    ///
+    /// - parameter onMedia: Called if the Media was successfully created and the image's data exported to an absoluteLocalURL.
+    /// - parameter onError: Called if an error was encountered during creation, error convertible to NSError with a localized description.
+    ///
     public func makeMedia(blog: Blog, image: UIImage, onMedia: @escaping (Media) -> (), onError: ((Error) -> ())?) {
         DispatchQueue.global(qos: .default).async {
             let exporter = MediaImageExporter()
@@ -56,7 +63,7 @@ open class MediaLibrary: LocalCoreDataService {
         }
     }
 
-    public func makeMediaWith(blog: Blog, video: URL, onMedia: @escaping (Media) -> (), onError: ((Error) -> ())?) {
+    public func makeMediaWith(blog: Blog, url: URL, onMedia: @escaping (Media) -> (), onError: ((Error) -> ())?) {
 
     }
 }

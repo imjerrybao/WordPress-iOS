@@ -38,7 +38,7 @@
 		0807CB721CE670A800CDBDAC /* WPContentSearchHelper.swift in Sources */ = {isa = PBXBuildFile; fileRef = 0807CB711CE670A800CDBDAC /* WPContentSearchHelper.swift */; };
 		0809C97F1EA001E700E7E4A2 /* MediaExporter.swift in Sources */ = {isa = PBXBuildFile; fileRef = 0809C97E1EA001E700E7E4A2 /* MediaExporter.swift */; };
 		0809C9811EA0023900E7E4A2 /* MediaImageExporter.swift in Sources */ = {isa = PBXBuildFile; fileRef = 0809C9801EA0023900E7E4A2 /* MediaImageExporter.swift */; };
-		0809C9831EA0026200E7E4A2 /* MediaPHAssetExporter.swift in Sources */ = {isa = PBXBuildFile; fileRef = 0809C9821EA0026200E7E4A2 /* MediaPHAssetExporter.swift */; };
+		0809C9831EA0026200E7E4A2 /* MediaAssetExporter.swift in Sources */ = {isa = PBXBuildFile; fileRef = 0809C9821EA0026200E7E4A2 /* MediaAssetExporter.swift */; };
 		080AAA691E7C63C3004DCD11 /* Media+HTML.m in Sources */ = {isa = PBXBuildFile; fileRef = 080AAA681E7C63C3004DCD11 /* Media+HTML.m */; };
 		080C44A91CE14A9F00B3A02F /* MenuDetailsViewController.m in Sources */ = {isa = PBXBuildFile; fileRef = 080C449E1CE14A9F00B3A02F /* MenuDetailsViewController.m */; };
 		0815CF461E96F22600069916 /* MediaLibrary.swift in Sources */ = {isa = PBXBuildFile; fileRef = 0815CF451E96F22600069916 /* MediaLibrary.swift */; };
@@ -1088,7 +1088,7 @@
 		0807CB711CE670A800CDBDAC /* WPContentSearchHelper.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = WPContentSearchHelper.swift; sourceTree = "<group>"; };
 		0809C97E1EA001E700E7E4A2 /* MediaExporter.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; name = MediaExporter.swift; path = Classes/Utility/Media/MediaExporter.swift; sourceTree = SOURCE_ROOT; };
 		0809C9801EA0023900E7E4A2 /* MediaImageExporter.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; name = MediaImageExporter.swift; path = Classes/Utility/Media/MediaImageExporter.swift; sourceTree = SOURCE_ROOT; };
-		0809C9821EA0026200E7E4A2 /* MediaPHAssetExporter.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; name = MediaPHAssetExporter.swift; path = Classes/Utility/Media/MediaPHAssetExporter.swift; sourceTree = SOURCE_ROOT; };
+		0809C9821EA0026200E7E4A2 /* MediaAssetExporter.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; name = MediaAssetExporter.swift; path = Classes/Utility/Media/MediaAssetExporter.swift; sourceTree = SOURCE_ROOT; };
 		080AAA671E7C63C3004DCD11 /* Media+HTML.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = "Media+HTML.h"; sourceTree = "<group>"; };
 		080AAA681E7C63C3004DCD11 /* Media+HTML.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = "Media+HTML.m"; sourceTree = "<group>"; };
 		080C449D1CE14A9F00B3A02F /* MenuDetailsViewController.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = MenuDetailsViewController.h; sourceTree = "<group>"; };
@@ -2719,7 +2719,7 @@
 			isa = PBXGroup;
 			children = (
 				0809C97E1EA001E700E7E4A2 /* MediaExporter.swift */,
-				0809C9821EA0026200E7E4A2 /* MediaPHAssetExporter.swift */,
+				0809C9821EA0026200E7E4A2 /* MediaAssetExporter.swift */,
 				0809C9801EA0023900E7E4A2 /* MediaImageExporter.swift */,
 				086650641EA1841D00DC4B44 /* MediaURLExporter.swift */,
 			);
@@ -6267,7 +6267,7 @@
 				BE1071FC1BC75E7400906AFF /* WPStyleGuide+Blog.swift in Sources */,
 				E149D64E19349E69006A843D /* AccountServiceRemoteREST.m in Sources */,
 				B56695B01D411EEB007E342F /* KeyboardDismissHelper.swift in Sources */,
-				0809C9831EA0026200E7E4A2 /* MediaPHAssetExporter.swift in Sources */,
+				0809C9831EA0026200E7E4A2 /* MediaAssetExporter.swift in Sources */,
 				FF54D4641D6F3FA900A0DC4D /* EditorSettings.swift in Sources */,
 				5D9282F91B54697D00066CED /* RemoteReaderSiteInfo.m in Sources */,
 				E6D2E16C1B8B423B0000ED14 /* ReaderStreamHeader.swift in Sources */,

@@ -79,7 +79,7 @@ class MediaPHAssetExporter: MediaExporter {
                 throw ExportError.unavailablePHAssetImageResource
             }
 
-            if resource.uniformTypeIdentifier == kUTTypeGIF as String {
+            if UTTypeEqual(resource.uniformTypeIdentifier as CFString, kUTTypeGIF) {
                 // Since this is a GIF, handle the export in it's own way.
                 exportGIF(forAsset: asset, resource: resource, onCompletion: onCompletion, onError: onError)
                 return
@@ -207,7 +207,7 @@ class MediaPHAssetExporter: MediaExporter {
     ///
     fileprivate func exportGIF(forAsset asset: PHAsset, resource: PHAssetResource, onCompletion: @escaping (URL) -> (), onError: @escaping (MediaExporterError) -> ()) {
         do {
-            guard resource.uniformTypeIdentifier == kUTTypeGIF as String else {
+            guard UTTypeEqual(resource.uniformTypeIdentifier as CFString, kUTTypeGIF) else {
                 throw ExportError.expectedPHAssetGIFType
             }
             let url = try MediaLibrary.makeLocalMediaURL(withFilename: resource.originalFilename, fileExtension: "gif")

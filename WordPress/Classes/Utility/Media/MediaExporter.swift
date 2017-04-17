@@ -1,4 +1,5 @@
 import Foundation
+import MobileCoreServices
 
 /// Generic Error protocol for detecting and type classifying known errors that occur while exporting.
 ///
@@ -50,5 +51,10 @@ extension MediaExporter {
         default:
             return MediaExportSystemError.failedWith(systemError: error)
         }
+    }
+
+    func fileExtensionForUTType(_ type: String) -> String? {
+        let fileExtension = UTTypeCopyPreferredTagWithClass(type as CFString, kUTTagClassFilenameExtension)?.takeRetainedValue()
+        return fileExtension as String?
     }
 }

@@ -94,7 +94,9 @@ class MediaURLExporter: MediaExporter {
                     }
                     return
                 }
-                onCompletion(URLExport.exportedVideo(MediaVideoExport(url: mediaURL)))
+                onCompletion(URLExport.exportedVideo(MediaVideoExport(url: mediaURL,
+                                                                      duration: session.maxDuration.seconds,
+                                                                      fileSize: session.estimatedOutputFileLength)))
             }
         } catch {
             onError(exporterErrorWith(error: error))
@@ -108,7 +110,8 @@ class MediaURLExporter: MediaExporter {
             let fileManager = FileManager.default
             let mediaURL = try MediaLibrary.makeLocalMediaURL(withFilename: url.lastPathComponent, fileExtension: "gif")
             try fileManager.copyItem(at: url, to: mediaURL)
-            onCompletion(URLExport.exportedGIF(MediaGIFExport(url: mediaURL)))
+            onCompletion(URLExport.exportedGIF(MediaGIFExport(url: mediaURL,
+                                                              fileSize: fileSizeAtURL(mediaURL))))
         } catch {
             onError(exporterErrorWith(error: error))
         }

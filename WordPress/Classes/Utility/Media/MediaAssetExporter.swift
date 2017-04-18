@@ -174,7 +174,9 @@ class MediaPHAssetExporter: MediaExporter {
                     return
                 }
                 // Finally complete with the export URL.
-                onCompletion(AssetExport.exportedVideo(MediaVideoExport(url: exportURL)))
+                onCompletion(AssetExport.exportedVideo(MediaVideoExport(url: exportURL,
+                                                                        duration: session.maxDuration.seconds,
+                                                                        fileSize: session.estimatedOutputFileLength)))
             }
 
             // Begin export by requesting an export session.
@@ -222,7 +224,8 @@ class MediaPHAssetExporter: MediaExporter {
                                     onError(self.exporterErrorWith(error: error))
                                     return
                                 }
-                                onCompletion(AssetExport.exportedGIF(MediaGIFExport(url: url)))
+                                onCompletion(AssetExport.exportedGIF(MediaGIFExport(url: url,
+                                                                                    fileSize: self.fileSizeAtURL(url))))
             })
         } catch {
             onError(exporterErrorWith(error: error))

@@ -7,24 +7,31 @@ protocol MediaExport {
     /// The resulting file URL of an export.
     ///
     var url: URL { get }
+    var fileSize: Int64? { get }
 }
 
 /// Struct of an image export.
 ///
 struct MediaImageExport: MediaExport {
     let url: URL
+    let width: CGFloat?
+    let height: CGFloat?
+    let fileSize: Int64?
 }
 
 /// Struct of a video export.
 ///
 struct MediaVideoExport: MediaExport {
     let url: URL
+    let duration: TimeInterval?
+    let fileSize: Int64?
 }
 
 /// Struct of a GIF export.
 ///
 struct MediaGIFExport: MediaExport {
     let url: URL
+    let fileSize: Int64?
 }
 
 /// Generic Error protocol for detecting and type classifying known errors that occur while exporting.
@@ -77,6 +84,11 @@ extension MediaExporter {
         default:
             return MediaExportSystemError.failedWith(systemError: error)
         }
+    }
+
+    func fileSizeAtURL(_ url: URL) -> Int64? {
+        let attributes = try? FileManager.default.attributesOfItem(atPath: url.path)
+        return attributes?[.size] as? Int64
     }
 
     func fileExtensionForUTType(_ type: String) -> String? {

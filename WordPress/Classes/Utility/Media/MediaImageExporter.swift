@@ -128,8 +128,11 @@ class MediaImageExporter: MediaExporter {
                     writer.maximumSize = mediaSettingsUploadSize as CFNumber
                 }
             }
-            try writer.writeImageSource(source)
-            onCompletion(MediaImageExport(url: url))
+            let result = try writer.writeImageSource(source)
+            onCompletion(MediaImageExport(url: url,
+                                          width: result.width,
+                                          height: result.height,
+                                          fileSize: result.fileSize))
         } catch {
             onError(exporterErrorWith(error: error))
         }
@@ -143,7 +146,7 @@ class MediaImageExporter: MediaExporter {
     /// - parameter nullifyGPSData: Whether or not GPS data should be nullified.
     /// - parameter maximumSize: A maximum size required for the image to be written, or nil.
     ///
-    struct ImageSourceWriter {
+    fileprivate struct ImageSourceWriter {
 
         var url: URL
         var sourceUTType: CFString
@@ -156,9 +159,15 @@ class MediaImageExporter: MediaExporter {
             self.sourceUTType = sourceUTType
         }
 
-        /// Write a given image source, succeeds unless an error is thrown.
+        struct WriteResultProperties {
+            let width: CGFloat?
+            let height: CGFloat?
+            let fileSize: Int64?
+        }
+
+        /// Write a given image source, succeeds unless an error is thrown, returns the resulting properties if available.
         ///
-        fileprivate func writeImageSource(_ source: CGImageSource) throws {
+        func writeImageSource(_ source: CGImageSource) throws -> WriteResultProperties {
             // Create the destination with the URL, or error
             guard let destination = CGImageDestinationCreateWithURL(url as CFURL, sourceUTType, 1, nil) else {
                 throw ExportError.imageSourceDestinationWithURLFailed
@@ -173,21 +182,29 @@ class MediaImageExporter: MediaExporter {
                 imageProperties[kCGImagePropertyGPSDictionary as String] = kCFNull
             }
 
+            var sourceImageIndex = 0
             if let maximumSize = maximumSize {
                 // Create a thumbnail of the image source, and use it at the primary image to write to the destination
                 let thumbnailOptions: [String: Any] = [kCGImageSourceThumbnailMaxPixelSize as String: maximumSize]
                 CGImageSourceCreateThumbnailAtIndex(source, 1, thumbnailOptions as CFDictionary)
-                CGImageDestinationAddImageFromSource(destination, source, 1, imageProperties as CFDictionary)
-            } else {
-                // Add the full sized image from the source to the destination
-                CGImageDestinationAddImageFromSource(destination, source, 0, imageProperties as CFDictionary)
+                sourceImageIndex = 1
             }
+
+            CGImageDestinationAddImageFromSource(destination, source, sourceImageIndex, imageProperties as CFDictionary)
 
             // Write the image to the file URL
             let written = CGImageDestinationFinalize(destination)
             guard written == true else {
                 throw ExportError.imageSourceDestinationWriteFailed
             }
+
+            let sourceProperties = CGImageSourceCopyPropertiesAtIndex(source, 0, nil) as? Dictionary<String, AnyObject>
+
+            let width: CGFloat? = sourceProperties?[kCGImagePropertyPixelWidth as String] as? CGFloat
+            let height: CGFloat? = sourceProperties?[kCGImagePropertyPixelHeight as String] as? CGFloat
+            let fileSize: Int64? = sourceProperties?[kCGImagePropertyFileSize as String] as? Int64
+
+            return WriteResultProperties(width: width, height: height, fileSize: fileSize)
         }
     }
 }

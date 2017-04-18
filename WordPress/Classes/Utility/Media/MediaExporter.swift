@@ -3,15 +3,15 @@ import MobileCoreServices
 
 /// Generic Error protocol for detecting and type classifying known errors that occur while exporting.
 ///
-protocol MediaExporterError: Error, CustomStringConvertible {
+protocol MediaExportError: Error, CustomStringConvertible {
     /// Convert an Error to an NSError with a localizedDescription available.
     ///
     func toNSError() -> NSError
 }
 
-/// Generic MediaExporterError tied to a system generated Error.
+/// Generic MediaExportError tied to a system generated Error.
 ///
-enum MediaExportSystemError: MediaExporterError {
+enum MediaExportSystemError: MediaExportError {
     case failedWith(systemError: Error)
     public var description: String {
         switch self {
@@ -39,14 +39,14 @@ protocol MediaExporter {
 
 extension MediaExporter {
 
-    /// Handles wrapping into MediaExporterError type values when the encountered Error type value is unknown.
+    /// Handles wrapping into MediaExportError type values when the encountered Error type value is unknown.
     ///
     /// - param error: Error with an unknown type value, or nil for easy conversion.
     /// - returns: The ExporterError type value itself, or an ExportError.failedWith
     ///
-    func exporterErrorWith(error: Error) -> MediaExporterError {
+    func exporterErrorWith(error: Error) -> MediaExportError {
         switch error {
-        case let error as MediaExporterError:
+        case let error as MediaExportError:
             return error
         default:
             return MediaExportSystemError.failedWith(systemError: error)

@@ -8,7 +8,7 @@ class MediaPHAssetExporter: MediaExporter {
     var resizesIfNeeded = true
     var stripsGeoLocationIfNeeded = true
 
-    public enum ExportError: MediaExporterError {
+    public enum ExportError: MediaExportError {
         case unsupportedPHAssetMediaType
         case expectedPHAssetImageType
         case expectedPHAssetVideoType
@@ -57,7 +57,7 @@ class MediaPHAssetExporter: MediaExporter {
 
     /// Helper method encapsulating exporting either an image or video.
     ///
-    func exportData(forAsset asset: PHAsset, onCompletion: @escaping (URL) -> (), onError: @escaping (MediaExporterError) -> ()) {
+    func exportData(forAsset asset: PHAsset, onCompletion: @escaping (URL) -> (), onError: @escaping (MediaExportError) -> ()) {
         if asset.mediaType == .image {
             exportImage(forAsset: asset, onCompletion: onCompletion, onError: onError)
         } else if asset.mediaType == .video {
@@ -67,7 +67,7 @@ class MediaPHAssetExporter: MediaExporter {
         }
     }
 
-    fileprivate func exportImage(forAsset asset: PHAsset, onCompletion: @escaping (URL) -> (), onError: @escaping (MediaExporterError) -> ()) {
+    fileprivate func exportImage(forAsset asset: PHAsset, onCompletion: @escaping (URL) -> (), onError: @escaping (MediaExportError) -> ()) {
         do {
             guard asset.mediaType == .image else {
                 throw ExportError.expectedPHAssetImageType
@@ -138,7 +138,7 @@ class MediaPHAssetExporter: MediaExporter {
     /// - parameter onCompletion: Called on successful export, with the local file URL of the exported asset.
     /// - parameter onError: Called if an error was encountered during export.
     ///
-    fileprivate func exportVideo(forAsset asset: PHAsset, onCompletion: @escaping (URL) -> (), onError: @escaping (MediaExporterError) -> ()) {
+    fileprivate func exportVideo(forAsset asset: PHAsset, onCompletion: @escaping (URL) -> (), onError: @escaping (MediaExportError) -> ()) {
         do {
             guard asset.mediaType == .video else {
                 throw ExportError.expectedPHAssetVideoType
@@ -205,7 +205,7 @@ class MediaPHAssetExporter: MediaExporter {
     /// - parameter onCompletion: Called on successful export, with the local file URL of the exported asset.
     /// - parameter onError: Called if an error was encountered during export.
     ///
-    fileprivate func exportGIF(forAsset asset: PHAsset, resource: PHAssetResource, onCompletion: @escaping (URL) -> (), onError: @escaping (MediaExporterError) -> ()) {
+    fileprivate func exportGIF(forAsset asset: PHAsset, resource: PHAssetResource, onCompletion: @escaping (URL) -> (), onError: @escaping (MediaExportError) -> ()) {
         do {
             guard UTTypeEqual(resource.uniformTypeIdentifier as CFString, kUTTypeGIF) else {
                 throw ExportError.expectedPHAssetGIFType

@@ -8,6 +8,14 @@ class MediaPHAssetExporter: MediaExporter {
     var resizesIfNeeded = true
     var stripsGeoLocationIfNeeded = true
 
+    /// Enumerable type value for an AssetExport, typed according to the resulting export of the asset.
+    ///
+    public enum AssetExport {
+        case exportedImage(MediaImageExport)
+        case exportedVideo(MediaVideoExport)
+        case exportedGIF(MediaGIFExport)
+    }
+
     public enum ExportError: MediaExportError {
         case unsupportedPHAssetMediaType
         case expectedPHAssetImageType
@@ -42,22 +50,9 @@ class MediaPHAssetExporter: MediaExporter {
         }
     }
 
-    func configure(media: Media, withAsset asset: PHAsset) {
-        switch asset.mediaType {
-        case .image:
-            media.mediaType = .image
-        case .video:
-            media.mediaType = .video
-        default:
-            media.mediaType = .document
-        }
-        media.width = asset.pixelWidth as NSNumber
-        media.height = asset.pixelHeight as NSNumber
-    }
-
     /// Helper method encapsulating exporting either an image or video.
     ///
-    func exportData(forAsset asset: PHAsset, onCompletion: @escaping (URL) -> (), onError: @escaping (MediaExportError) -> ()) {
+    func exportData(forAsset asset: PHAsset, onCompletion: @escaping (AssetExport) -> (), onError: @escaping (MediaExportError) -> ()) {
         if asset.mediaType == .image {
             exportImage(forAsset: asset, onCompletion: onCompletion, onError: onError)
         } else if asset.mediaType == .video {
@@ -67,7 +62,7 @@ class MediaPHAssetExporter: MediaExporter {
         }
     }
 
-    fileprivate func exportImage(forAsset asset: PHAsset, onCompletion: @escaping (URL) -> (), onError: @escaping (MediaExportError) -> ()) {
+    fileprivate func exportImage(forAsset asset: PHAsset, onCompletion: @escaping (AssetExport) -> (), onError: @escaping (MediaExportError) -> ()) {
         do {
             guard asset.mediaType == .image else {
                 throw ExportError.expectedPHAssetImageType
@@ -126,7 +121,12 @@ class MediaPHAssetExporter: MediaExporter {
                                     let exporter = MediaImageExporter()
                                     exporter.resizesIfNeeded = false
                                     exporter.stripsGeoLocationIfNeeded = self.stripsGeoLocationIfNeeded
-                                    exporter.exportImage(image, fileName: resource.originalFilename, onCompletion: onCompletion, onError: onError)
+                                    exporter.exportImage(image,
+                                                         fileName: resource.originalFilename,
+                                                         onCompletion: { (imageExport) in
+                                                            onCompletion(AssetExport.exportedImage(imageExport))
+                                    },
+                                                         onError: onError)
             })
         } catch {
             onError(exporterErrorWith(error: error))
@@ -138,7 +138,7 @@ class MediaPHAssetExporter: MediaExporter {
     /// - parameter onCompletion: Called on successful export, with the local file URL of the exported asset.
     /// - parameter onError: Called if an error was encountered during export.
     ///
-    fileprivate func exportVideo(forAsset asset: PHAsset, onCompletion: @escaping (URL) -> (), onError: @escaping (MediaExportError) -> ()) {
+    fileprivate func exportVideo(forAsset asset: PHAsset, onCompletion: @escaping (AssetExport) -> (), onError: @escaping (MediaExportError) -> ()) {
         do {
             guard asset.mediaType == .video else {
                 throw ExportError.expectedPHAssetVideoType
@@ -174,7 +174,7 @@ class MediaPHAssetExporter: MediaExporter {
                     return
                 }
                 // Finally complete with the export URL.
-                onCompletion(exportURL)
+                onCompletion(AssetExport.exportedVideo(MediaVideoExport(url: exportURL)))
             }
 
             // Begin export by requesting an export session.
@@ -205,7 +205,7 @@ class MediaPHAssetExporter: MediaExporter {
     /// - parameter onCompletion: Called on successful export, with the local file URL of the exported asset.
     /// - parameter onError: Called if an error was encountered during export.
     ///
-    fileprivate func exportGIF(forAsset asset: PHAsset, resource: PHAssetResource, onCompletion: @escaping (URL) -> (), onError: @escaping (MediaExportError) -> ()) {
+    fileprivate func exportGIF(forAsset asset: PHAsset, resource: PHAssetResource, onCompletion: @escaping (AssetExport) -> (), onError: @escaping (MediaExportError) -> ()) {
         do {
             guard UTTypeEqual(resource.uniformTypeIdentifier as CFString, kUTTypeGIF) else {
                 throw ExportError.expectedPHAssetGIFType
@@ -222,7 +222,7 @@ class MediaPHAssetExporter: MediaExporter {
                                     onError(self.exporterErrorWith(error: error))
                                     return
                                 }
-                                onCompletion(url)
+                                onCompletion(AssetExport.exportedGIF(MediaGIFExport(url: url)))
             })
         } catch {
             onError(exporterErrorWith(error: error))

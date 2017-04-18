@@ -1,6 +1,32 @@
 import Foundation
 import MobileCoreServices
 
+/// General MediaExport protocol, requiring a URL
+///
+protocol MediaExport {
+    /// The resulting file URL of an export.
+    ///
+    var url: URL { get }
+}
+
+/// Struct of an image export.
+///
+struct MediaImageExport: MediaExport {
+    let url: URL
+}
+
+/// Struct of a video export.
+///
+struct MediaVideoExport: MediaExport {
+    let url: URL
+}
+
+/// Struct of a GIF export.
+///
+struct MediaGIFExport: MediaExport {
+    let url: URL
+}
+
 /// Generic Error protocol for detecting and type classifying known errors that occur while exporting.
 ///
 protocol MediaExportError: Error, CustomStringConvertible {

@@ -15,11 +15,23 @@ open class MediaLibrary: LocalCoreDataService {
     public func makeMediaWith(blog: Blog, asset: PHAsset, onMedia: @escaping (Media) -> (), onError: ((Error) -> ())?) {
         DispatchQueue.global(qos: .default).async {
             let exporter = MediaPHAssetExporter()
-            exporter.exportData(forAsset: asset, onCompletion: { (url) in
+            exporter.exportData(forAsset: asset, onCompletion: { (assetExport) in
                 self.managedObjectContext.perform {
+
                     let media = Media.makeMedia(blog: blog)
-                    exporter.configure(media: media, withAsset: asset)
-                    media.absoluteLocalURL = url
+
+                    switch assetExport {
+                    case .exportedImage(let imageExport):
+                        media.absoluteLocalURL = imageExport.url
+                        media.mediaType = .image
+                    case .exportedVideo(let videoExport):
+                        media.absoluteLocalURL = videoExport.url
+                        media.mediaType = .video
+                    case .exportedGIF(let gifExport):
+                        media.absoluteLocalURL = gifExport.url
+                        media.mediaType = .image
+                    }
+
                     onMedia(media)
                 }
             }, onError: { (error) in
@@ -44,11 +56,11 @@ open class MediaLibrary: LocalCoreDataService {
     public func makeMedia(blog: Blog, image: UIImage, onMedia: @escaping (Media) -> (), onError: ((Error) -> ())?) {
         DispatchQueue.global(qos: .default).async {
             let exporter = MediaImageExporter()
-            exporter.exportImage(image, fileName: nil, onCompletion: { (url) in
+            exporter.exportImage(image, fileName: nil, onCompletion: { (imageExport) in
                 self.managedObjectContext.perform {
                     let media = Media.makeMedia(blog: blog)
                     media.mediaType = .image
-                    media.absoluteLocalURL = url
+                    media.absoluteLocalURL = imageExport.url
                     onMedia(media)
                 }
             }, onError: { (error) in
@@ -73,11 +85,22 @@ open class MediaLibrary: LocalCoreDataService {
     public func makeMediaWith(blog: Blog, url: URL, onMedia: @escaping (Media) -> (), onError: ((Error) -> ())?) {
         DispatchQueue.global(qos: .default).async {
             let exporter = MediaURLExporter()
-            exporter.exportURL(fileURL: url, onCompletion: { (url) in
+            exporter.exportURL(fileURL: url, onCompletion: { (urlExport) in
                 self.managedObjectContext.perform {
                     let media = Media.makeMedia(blog: blog)
-                    media.mediaType = .image
-                    media.absoluteLocalURL = url
+
+                    switch urlExport {
+                    case .exportedImage(let imageExport):
+                        media.absoluteLocalURL = imageExport.url
+                        media.mediaType = .image
+                    case .exportedVideo(let videoExport):
+                        media.absoluteLocalURL = videoExport.url
+                        media.mediaType = .video
+                    case .exportedGIF(let gifExport):
+                        media.absoluteLocalURL = gifExport.url
+                        media.mediaType = .image
+                    }
+
                     onMedia(media)
                 }
             }, onError: { (error) in

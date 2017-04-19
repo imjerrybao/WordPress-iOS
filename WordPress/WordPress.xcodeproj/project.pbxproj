@@ -104,6 +104,7 @@
 		08D978571CD2AF7D0054F19A /* MenuItemCheckButtonView.m in Sources */ = {isa = PBXBuildFile; fileRef = 08D978501CD2AF7D0054F19A /* MenuItemCheckButtonView.m */; };
 		08D978581CD2AF7D0054F19A /* MenuItemSourceHeaderView.m in Sources */ = {isa = PBXBuildFile; fileRef = 08D978521CD2AF7D0054F19A /* MenuItemSourceHeaderView.m */; };
 		08D978591CD2AF7D0054F19A /* MenuItemSourceTextBar.m in Sources */ = {isa = PBXBuildFile; fileRef = 08D978541CD2AF7D0054F19A /* MenuItemSourceTextBar.m */; };
+		08DD30AB1EA819B600B9EFA5 /* MediaExporterTests.swift in Sources */ = {isa = PBXBuildFile; fileRef = 08DD30AA1EA819B600B9EFA5 /* MediaExporterTests.swift */; };
 		08DF9C441E8475530058678C /* test-image-portrait.jpg in Resources */ = {isa = PBXBuildFile; fileRef = 08DF9C431E8475530058678C /* test-image-portrait.jpg */; };
 		1702BBDC1CEDEA6B00766A33 /* BadgeLabel.swift in Sources */ = {isa = PBXBuildFile; fileRef = 1702BBDB1CEDEA6B00766A33 /* BadgeLabel.swift */; };
 		1702BBE01CF3034E00766A33 /* DomainsService.swift in Sources */ = {isa = PBXBuildFile; fileRef = 1702BBDF1CF3034E00766A33 /* DomainsService.swift */; };
@@ -1205,6 +1206,7 @@
 		08D978521CD2AF7D0054F19A /* MenuItemSourceHeaderView.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = MenuItemSourceHeaderView.m; sourceTree = "<group>"; };
 		08D978531CD2AF7D0054F19A /* MenuItemSourceTextBar.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = MenuItemSourceTextBar.h; sourceTree = "<group>"; };
 		08D978541CD2AF7D0054F19A /* MenuItemSourceTextBar.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = MenuItemSourceTextBar.m; sourceTree = "<group>"; };
+		08DD30AA1EA819B600B9EFA5 /* MediaExporterTests.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = MediaExporterTests.swift; sourceTree = "<group>"; };
 		08DF9C431E8475530058678C /* test-image-portrait.jpg */ = {isa = PBXFileReference; lastKnownFileType = image.jpeg; path = "test-image-portrait.jpg"; sourceTree = "<group>"; };
 		08E5CAD31E7B3A4500FAC71B /* WordPress 57.xcdatamodel */ = {isa = PBXFileReference; lastKnownFileType = wrapper.xcdatamodel; path = "WordPress 57.xcdatamodel"; sourceTree = "<group>"; };
 		08F37EC61C7554EF0095BE8B /* PostServiceRemoteOptions.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = PostServiceRemoteOptions.h; sourceTree = "<group>"; };
@@ -2862,6 +2864,14 @@
 			path = Menus;
 			sourceTree = "<group>";
 		};
+		08DD30A91EA8186500B9EFA5 /* Media */ = {
+			isa = PBXGroup;
+			children = (
+				08DD30AA1EA819B600B9EFA5 /* MediaExporterTests.swift */,
+			);
+			name = Media;
+			sourceTree = "<group>";
+		};
 		1702BBE71CF357A200766A33 /* Domains */ = {
 			isa = PBXGroup;
 			children = (
@@ -3585,6 +3595,7 @@
 			isa = PBXGroup;
 			children = (
 				93B853211B44165B0064FE72 /* Analytics */,
+				08DD30A91EA8186500B9EFA5 /* Media */,
 				82301B8E1E787420009C9C4E /* AppRatingUtilityTests.swift */,
 				17AF92241C46634000A99CFB /* BlogSiteVisibilityHelperTest.m */,
 				5DA988051AEEA594002AFB12 /* DisplayableImageHelperTest.m */,
@@ -6879,6 +6890,7 @@
 				E1AB5A3A1E0C464700574B4E /* DelayTests.swift in Sources */,
 				08A2AD751CCEBDBD00E84454 /* TaxonomyServiceRemoteRESTTests.m in Sources */,
 				5948AD111AB73D19006E8882 /* WPAppAnalyticsTests.m in Sources */,
+				08DD30AB1EA819B600B9EFA5 /* MediaExporterTests.swift in Sources */,
 				85D239C01AE5A7020074768D /* LoginFacadeTests.m in Sources */,
 				E63C897C1CB9A0D700649C8F /* UITextFieldTextHelperTests.swift in Sources */,
 				E63C897A1CB9A0BB00649C8F /* StringHelperTests.swift in Sources */,

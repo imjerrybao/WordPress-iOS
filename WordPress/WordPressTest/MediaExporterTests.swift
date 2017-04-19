@@ -1,5 +1,6 @@
 import XCTest
 @testable import WordPress
+import MobileCoreServices
 
 class MediaExporterTests: XCTestCase {
 
@@ -35,5 +36,27 @@ class MediaExporterTests: XCTestCase {
         let generalErrorWrappedAsAnExporterError = exporter.exporterErrorWith(error: generalError)
 
         XCTAssert(generalErrorWrappedAsAnExporterError.toNSError().isEqual(generalError), "Error: unexpected NSError generated while wrapping within a MediaExportError")
+    }
+
+    func testThatFileExtensionForTypeIsWorking() {
+        // Testing JPEG as a simple test of the implementation.
+        // Maybe expanding the test to all of our supported types would be helpful.
+        let exporter = MediaImageExporter()
+        let expected = "jpeg"
+        XCTAssert(exporter.fileExtensionForUTType(kUTTypeJPEG as String) == expected, "Error: unexpected extension found when converting from UTType")
+    }
+
+    func testThatFileSizeAtURLWorks() {
+        guard let mediaPath = OHPathForFile("test-image.jpg", type(of: self)) else {
+            XCTAssert(false, "Error: failed creating a path to the test image file")
+            return
+        }
+        let url = URL(fileURLWithPath: mediaPath)
+        let exporter = MediaImageExporter()
+        guard let size = exporter.fileSizeAtURL(url) else {
+            XCTAssert(false, "Error: failed getting a size of the test image file")
+            return
+        }
+        XCTAssert(size == 233139, "Error: unexpected file size found for the test image: \(size)")
     }
 }

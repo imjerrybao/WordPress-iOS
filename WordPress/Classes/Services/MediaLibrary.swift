@@ -14,7 +14,7 @@ open class MediaLibrary: LocalCoreDataService {
     ///
     public func makeMediaWith(blog: Blog, asset: PHAsset, onMedia: @escaping (Media) -> (), onError: ((Error) -> ())?) {
         DispatchQueue.global(qos: .default).async {
-            let exporter = MediaPHAssetExporter()
+            let exporter = MediaAssetExporter()
             exporter.exportData(forAsset: asset, onCompletion: { (assetExport) in
                 self.managedObjectContext.perform {
 

@@ -3,7 +3,7 @@ import MobileCoreServices
 
 /// MediaLibrary export handling of PHAssets
 ///
-class MediaPHAssetExporter: MediaExporter {
+class MediaAssetExporter: MediaExporter {
 
     var resizesIfNeeded = true
     var stripsGeoLocationIfNeeded = true

@@ -163,5 +163,6 @@ open class MediaLibrary: LocalCoreDataService {
             media.filesize = fileSize as NSNumber
         }
         media.absoluteLocalURL = export.url
+        media.filename = export.url.lastPathComponent
     }
 }

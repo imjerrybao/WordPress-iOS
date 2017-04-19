@@ -1,7 +1,7 @@
 import Foundation
 import MobileCoreServices
 
-/// General MediaExport protocol, requiring a URL
+/// General MediaExport protocol, and its requirements.
 ///
 protocol MediaExport {
     /// The resulting file URL of an export.

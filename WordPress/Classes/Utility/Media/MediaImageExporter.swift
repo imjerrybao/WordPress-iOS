@@ -75,7 +75,7 @@ class MediaImageExporter: MediaExporter {
             guard UTTypeEqual(utType, kUTTypeJPEG) else {
                 throw ExportError.imageSourceExpectedJPEGImageType
             }
-            exportImageSource(source, fileName: fileName, type:utType as String, onCompletion: onCompletion, onError: onError)
+            exportImageSource(source, filename: fileName, type:utType as String, onCompletion: onCompletion, onError: onError)
         } catch {
             onError(exporterErrorWith(error: error))
         }
@@ -98,7 +98,7 @@ class MediaImageExporter: MediaExporter {
             guard let utType = CGImageSourceGetType(source) else {
                 throw ExportError.imageSourceIsAnUnknownType
             }
-            exportImageSource(source, fileName: url.deletingPathExtension().lastPathComponent, type:utType as String, onCompletion: onCompletion, onError: onError)
+            exportImageSource(source, filename: url.deletingPathExtension().lastPathComponent, type:utType as String, onCompletion: onCompletion, onError: onError)
         } catch {
             onError(exporterErrorWith(error: error))
         }
@@ -110,10 +110,11 @@ class MediaImageExporter: MediaExporter {
     /// - parameter onCompletion: Called on successful export, with the local file URL of the exported UIImage.
     /// - parameter onError: Called if an error was encountered during creation.
     ///
-    func exportImageSource(_ source: CGImageSource, fileName: String?, type: String, onCompletion: @escaping (MediaImageExport) -> (), onError: @escaping (MediaExportError) -> ()) {
+    func exportImageSource(_ source: CGImageSource, filename: String?, type: String, onCompletion: @escaping (MediaImageExport) -> (), onError: @escaping (MediaExportError) -> ()) {
         do {
+            let filename = filename ?? defaultImageFilename
             // Make a new URL within the local Media directory
-            let url = try MediaLibrary.makeLocalMediaURL(withFilename: fileName ?? defaultImageFilename,
+            let url = try MediaLibrary.makeLocalMediaURL(withFilename: filename,
                                                          fileExtension: fileExtensionForUTType(type))
 
             // Check MediaSettings and configure the image writer as needed.

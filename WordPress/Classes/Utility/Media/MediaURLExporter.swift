@@ -95,8 +95,8 @@ class MediaURLExporter: MediaExporter {
                     return
                 }
                 onCompletion(URLExport.exportedVideo(MediaVideoExport(url: mediaURL,
-                                                                      duration: session.maxDuration.seconds,
-                                                                      fileSize: session.estimatedOutputFileLength)))
+                                                                      fileSize: session.estimatedOutputFileLength,
+                                                                      duration: session.maxDuration.seconds)))
             }
         } catch {
             onError(exporterErrorWith(error: error))

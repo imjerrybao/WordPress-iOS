@@ -27,6 +27,7 @@ open class MediaLibrary: LocalCoreDataService {
             }, onError: { (error) in
                 if let onError = onError {
                     self.managedObjectContext.perform {
+
                         let nerror = error.toNSError()
                         DDLogSwift.logError("Error occurred exporting Media with a PHAsset, code: \(nerror.code), error: \(nerror)")
                         onError(error.toNSError())
@@ -48,6 +49,7 @@ open class MediaLibrary: LocalCoreDataService {
             let exporter = MediaImageExporter()
             exporter.exportImage(image, fileName: nil, onCompletion: { (imageExport) in
                 self.managedObjectContext.perform {
+
                     let media = Media.makeMedia(blog: blog)
                     self.configureMedia(media, withExport: imageExport)
                     onMedia(media)
@@ -55,6 +57,7 @@ open class MediaLibrary: LocalCoreDataService {
             }, onError: { (error) in
                 if let onError = onError {
                     self.managedObjectContext.perform {
+
                         let nerror = error.toNSError()
                         DDLogSwift.logError("Error occurred exporting Media with a UIImage, code: \(nerror.code), error: \(nerror)")
                         onError(error.toNSError())
@@ -76,6 +79,7 @@ open class MediaLibrary: LocalCoreDataService {
             let exporter = MediaURLExporter()
             exporter.exportURL(fileURL: url, onCompletion: { (urlExport) in
                 self.managedObjectContext.perform {
+
                     let media = Media.makeMedia(blog: blog)
                     self.configureMedia(media, withExport: urlExport)
                     onMedia(media)
@@ -83,6 +87,7 @@ open class MediaLibrary: LocalCoreDataService {
             }, onError: { (error) in
                 if let onError = onError {
                     self.managedObjectContext.perform {
+
                         let nerror = error.toNSError()
                         DDLogSwift.logError("Error occurred exporting Media with a UIImage, code: \(nerror.code), error: \(nerror)")
                         onError(error.toNSError())

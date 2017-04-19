@@ -14,17 +14,17 @@ protocol MediaExport {
 ///
 struct MediaImageExport: MediaExport {
     let url: URL
+    let fileSize: Int64?
     let width: CGFloat?
     let height: CGFloat?
-    let fileSize: Int64?
 }
 
 /// Struct of a video export.
 ///
 struct MediaVideoExport: MediaExport {
     let url: URL
-    let duration: TimeInterval?
     let fileSize: Int64?
+    let duration: TimeInterval?
 }
 
 /// Struct of a GIF export.

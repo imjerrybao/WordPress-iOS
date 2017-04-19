@@ -175,8 +175,8 @@ class MediaAssetExporter: MediaExporter {
                 }
                 // Finally complete with the export URL.
                 onCompletion(AssetExport.exportedVideo(MediaVideoExport(url: exportURL,
-                                                                        duration: session.maxDuration.seconds,
-                                                                        fileSize: session.estimatedOutputFileLength)))
+                                                                        fileSize: session.estimatedOutputFileLength,
+                                                                        duration: session.maxDuration.seconds)))
             }
 
             // Begin export by requesting an export session.

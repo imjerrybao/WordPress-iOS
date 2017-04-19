@@ -51,7 +51,10 @@ class MediaImageExporter: MediaExporter {
             guard let data = UIImageJPEGRepresentation(image, 1.0) else {
                 throw ExportError.imageJPEGDataRepresentationFailed
             }
-            exportImage(withJPEGData: data, fileName: fileName, onCompletion: onCompletion, onError: onError)
+            exportImage(withJPEGData: data,
+                        fileName: fileName,
+                        onCompletion: onCompletion,
+                        onError: onError)
         } catch {
             onError(exporterErrorWith(error: error))
         }
@@ -75,7 +78,11 @@ class MediaImageExporter: MediaExporter {
             guard UTTypeEqual(utType, kUTTypeJPEG) else {
                 throw ExportError.imageSourceExpectedJPEGImageType
             }
-            exportImageSource(source, filename: fileName, type:utType as String, onCompletion: onCompletion, onError: onError)
+            exportImageSource(source,
+                              filename: fileName,
+                              type:utType as String,
+                              onCompletion: onCompletion,
+                              onError: onError)
         } catch {
             onError(exporterErrorWith(error: error))
         }
@@ -131,9 +138,9 @@ class MediaImageExporter: MediaExporter {
             }
             let result = try writer.writeImageSource(source)
             onCompletion(MediaImageExport(url: url,
+                                          fileSize: result.fileSize,
                                           width: result.width,
-                                          height: result.height,
-                                          fileSize: result.fileSize))
+                                          height: result.height))
         } catch {
             onError(exporterErrorWith(error: error))
         }
@@ -191,7 +198,10 @@ class MediaImageExporter: MediaExporter {
                 sourceImageIndex = 1
             }
 
-            CGImageDestinationAddImageFromSource(destination, source, sourceImageIndex, imageProperties as CFDictionary)
+            CGImageDestinationAddImageFromSource(destination,
+                                                 source,
+                                                 sourceImageIndex,
+                                                 imageProperties as CFDictionary)
 
             // Write the image to the file URL
             let written = CGImageDestinationFinalize(destination)
@@ -205,7 +215,9 @@ class MediaImageExporter: MediaExporter {
             let height: CGFloat? = sourceProperties?[kCGImagePropertyPixelHeight as String] as? CGFloat
             let fileSize: Int64? = sourceProperties?[kCGImagePropertyFileSize as String] as? Int64
 
-            return WriteResultProperties(width: width, height: height, fileSize: fileSize)
+            return WriteResultProperties(width: width,
+                                         height: height,
+                                         fileSize: fileSize)
         }
     }
 }

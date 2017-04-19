@@ -7,6 +7,8 @@ import Foundation
 ///
 open class MediaLibrary: LocalCoreDataService {
 
+    // MARK: - Instance methods
+
     /// Creates a Media object with an absoluteLocalURL for a PHAsset's data, asynchronously.
     ///
     /// - parameter onMedia: Called if the Media was successfully created and the asset's data exported to an absoluteLocalURL.
@@ -19,19 +21,7 @@ open class MediaLibrary: LocalCoreDataService {
                 self.managedObjectContext.perform {
 
                     let media = Media.makeMedia(blog: blog)
-
-                    switch assetExport {
-                    case .exportedImage(let imageExport):
-                        media.absoluteLocalURL = imageExport.url
-                        media.mediaType = .image
-                    case .exportedVideo(let videoExport):
-                        media.absoluteLocalURL = videoExport.url
-                        media.mediaType = .video
-                    case .exportedGIF(let gifExport):
-                        media.absoluteLocalURL = gifExport.url
-                        media.mediaType = .image
-                    }
-
+                    self.configureMedia(media, withExport: assetExport)
                     onMedia(media)
                 }
             }, onError: { (error) in
@@ -59,8 +49,7 @@ open class MediaLibrary: LocalCoreDataService {
             exporter.exportImage(image, fileName: nil, onCompletion: { (imageExport) in
                 self.managedObjectContext.perform {
                     let media = Media.makeMedia(blog: blog)
-                    media.mediaType = .image
-                    media.absoluteLocalURL = imageExport.url
+                    self.configureMedia(media, withExport: imageExport)
                     onMedia(media)
                 }
             }, onError: { (error) in
@@ -88,19 +77,7 @@ open class MediaLibrary: LocalCoreDataService {
             exporter.exportURL(fileURL: url, onCompletion: { (urlExport) in
                 self.managedObjectContext.perform {
                     let media = Media.makeMedia(blog: blog)
-
-                    switch urlExport {
-                    case .exportedImage(let imageExport):
-                        media.absoluteLocalURL = imageExport.url
-                        media.mediaType = .image
-                    case .exportedVideo(let videoExport):
-                        media.absoluteLocalURL = videoExport.url
-                        media.mediaType = .video
-                    case .exportedGIF(let gifExport):
-                        media.absoluteLocalURL = gifExport.url
-                        media.mediaType = .image
-                    }
-
+                    self.configureMedia(media, withExport: urlExport)
                     onMedia(media)
                 }
             }, onError: { (error) in
@@ -113,5 +90,73 @@ open class MediaLibrary: LocalCoreDataService {
                 }
             })
         }
+    }
+
+    // MARK: - Media export configurations
+
+
+    /// Configure Media with the AssetExport.
+    ///
+    fileprivate func configureMedia(_ media: Media, withExport export: MediaAssetExporter.AssetExport) {
+        switch export {
+        case .exportedImage(let imageExport):
+            configureMedia(media, withExport: imageExport)
+        case .exportedVideo(let videoExport):
+            configureMedia(media, withExport: videoExport)
+        case .exportedGIF(let gifExport):
+            configureMedia(media, withExport: gifExport)
+        }
+    }
+
+    /// Configure Media with the URLExport.
+    ///
+    fileprivate func configureMedia(_ media: Media, withExport export: MediaURLExporter.URLExport) {
+        switch export {
+        case .exportedImage(let imageExport):
+            configureMedia(media, withExport: imageExport)
+        case .exportedVideo(let videoExport):
+            configureMedia(media, withExport: videoExport)
+        case .exportedGIF(let gifExport):
+            configureMedia(media, withExport: gifExport)
+        }
+    }
+
+    /// Configure Media with the ImageExport.
+    ///
+    fileprivate func configureMedia(_ media: Media, withExport export: MediaImageExport) {
+        if let width = export.width {
+            media.width = width as NSNumber
+        }
+        if let height = export.height {
+            media.height = height as NSNumber
+        }
+        media.mediaType = .image
+        configureMedia(media, withExport: export)
+    }
+
+    /// Configure Media with the VideoExport.
+    ///
+    fileprivate func configureMedia(_ media: Media, withExport export: MediaVideoExport) {
+        if let duration = export.duration {
+            media.length = duration as NSNumber
+        }
+        media.mediaType = .video
+        configureMedia(media, withExport: export)
+    }
+
+    /// Configure Media with the GIFExport.
+    ///
+    fileprivate func configureMedia(_ media: Media, withExport export: MediaGIFExport) {
+        media.mediaType = .image
+        configureMedia(media, withExport: export)
+    }
+
+    /// Configure Media via the general Export protocol.
+    ///
+    fileprivate func configureMedia(_ media: Media, withExport export: MediaExport) {
+        if let fileSize = export.fileSize {
+            media.filesize = fileSize as NSNumber
+        }
+        media.absoluteLocalURL = export.url
     }
 }

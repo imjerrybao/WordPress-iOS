@@ -11,6 +11,7 @@ class MediaImageExporter: MediaExporter {
 
     var resizesIfNeeded = true
     var stripsGeoLocationIfNeeded = true
+    var mediaDirectoryType: MediaLibrary.MediaDirectoryType = .uploads
 
     public enum ExportError: MediaExportError {
         case imageJPEGDataRepresentationFailed

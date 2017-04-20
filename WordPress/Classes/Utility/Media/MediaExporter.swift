@@ -68,6 +68,12 @@ protocol MediaExporter {
     /// Strip the geoLocation from assets if needed, according to the user's MediaSettings.
     ///
     var stripsGeoLocationIfNeeded: Bool { get set }
+
+    /// The type of MediaDirectory to use for the export destination URL.
+    ///
+    /// - Note: This would almost always be set to .uploads, but for unit testing we use .temporary.almost
+    ///
+    var mediaDirectoryType: MediaLibrary.MediaDirectoryType { get set }
 }
 
 extension MediaExporter {

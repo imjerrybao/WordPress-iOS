@@ -7,6 +7,7 @@ class MediaURLExporter: MediaExporter {
 
     var resizesIfNeeded = true
     var stripsGeoLocationIfNeeded = true
+    var mediaDirectoryType: MediaLibrary.MediaDirectoryType = .uploads
 
     /// Enumerable type value for a URLExport, typed according to the resulting export of the file at the URL.
     ///

@@ -4,6 +4,11 @@ import MobileCoreServices
 
 class MediaExporterTests: XCTestCase {
 
+    func testThatImageExporterWorks() {
+        let exporter = MediaImageExporter()
+        exporter.mediaDirectoryType = .temporary
+    }
+
     func testExporterErrorsWork() {
 
         let sampleLocalizedString = "This was an error test"

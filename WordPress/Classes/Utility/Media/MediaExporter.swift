@@ -61,11 +61,11 @@ enum MediaExportSystemError: MediaExportError {
 }
 
 protocol MediaExporter {
-    /// Resize the image if needed, according to the user's MediaSettings.
+    /// Set a maximumImageSize for resizing images, or nil for exporting the full images.
     ///
-    var resizesIfNeeded: Bool { get set }
+    var maximumImageSize: CGFloat? { get set }
 
-    /// Strip the geoLocation from assets if needed, according to the user's MediaSettings.
+    /// Strip the geoLocation from assets, if needed.
     ///
     var stripsGeoLocationIfNeeded: Bool { get set }
 

@@ -5,7 +5,7 @@ import MobileCoreServices
 ///
 class MediaURLExporter: MediaExporter {
 
-    var resizesIfNeeded = true
+    var maximumImageSize: CGFloat?
     var stripsGeoLocationIfNeeded = true
     var mediaDirectoryType: MediaLibrary.MediaDirectoryType = .uploads
 
@@ -65,6 +65,9 @@ class MediaURLExporter: MediaExporter {
     fileprivate func exportImage(atURL url: URL, onCompletion: @escaping (URLExport) -> (), onError: @escaping (MediaExportError) -> ()) {
         // Pass the export off to the image exporter
         let exporter = MediaImageExporter()
+        exporter.maximumImageSize = maximumImageSize
+        exporter.stripsGeoLocationIfNeeded = stripsGeoLocationIfNeeded
+        exporter.mediaDirectoryType = mediaDirectoryType
         exporter.exportImage(atURL: url,
                              onCompletion: { (imageExport) in
                                 onCompletion(URLExport.exportedImage(imageExport))
@@ -82,7 +85,8 @@ class MediaURLExporter: MediaExporter {
             }
 
             let mediaURL = try MediaLibrary.makeLocalMediaURL(withFilename: url.lastPathComponent,
-                                                              fileExtension: fileExtensionForUTType(typeIdentifier))
+                                                              fileExtension: fileExtensionForUTType(typeIdentifier),
+                                                              type: mediaDirectoryType)
             session.outputURL = mediaURL
             session.outputFileType = typeIdentifier
             session.shouldOptimizeForNetworkUse = true
@@ -109,7 +113,9 @@ class MediaURLExporter: MediaExporter {
     fileprivate func exportGIF(atURL url: URL, onCompletion: @escaping (URLExport) -> (), onError: @escaping (MediaExportError) -> ()) {
         do {
             let fileManager = FileManager.default
-            let mediaURL = try MediaLibrary.makeLocalMediaURL(withFilename: url.lastPathComponent, fileExtension: "gif")
+            let mediaURL = try MediaLibrary.makeLocalMediaURL(withFilename: url.lastPathComponent,
+                                                              fileExtension: "gif",
+                                                              type: mediaDirectoryType)
             try fileManager.copyItem(at: url, to: mediaURL)
             onCompletion(URLExport.exportedGIF(MediaGIFExport(url: mediaURL,
                                                               fileSize: fileSizeAtURL(mediaURL))))

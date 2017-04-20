@@ -9,7 +9,7 @@ class MediaImageExporter: MediaExporter {
     ///
     let defaultImageFilename = "image"
 
-    var resizesIfNeeded = true
+    var maximumImageSize: CGFloat?
     var stripsGeoLocationIfNeeded = true
     var mediaDirectoryType: MediaLibrary.MediaDirectoryType = .uploads
 
@@ -123,20 +123,15 @@ class MediaImageExporter: MediaExporter {
             let filename = filename ?? defaultImageFilename
             // Make a new URL within the local Media directory
             let url = try MediaLibrary.makeLocalMediaURL(withFilename: filename,
-                                                         fileExtension: fileExtensionForUTType(type))
+                                                         fileExtension: fileExtensionForUTType(type),
+                                                         type: mediaDirectoryType)
 
             // Check MediaSettings and configure the image writer as needed.
-            let mediaSettings = MediaSettings()
             var writer = ImageSourceWriter(url: url, sourceUTType: type as CFString)
-            if stripsGeoLocationIfNeeded {
-                writer.nullifyGPSData = mediaSettings.removeLocationSetting
+            if let maximumImageSize = maximumImageSize {
+                writer.maximumSize = maximumImageSize as CFNumber
             }
-            if resizesIfNeeded {
-                let mediaSettingsUploadSize = mediaSettings.imageSizeForUpload
-                if mediaSettingsUploadSize < Int.max {
-                    writer.maximumSize = mediaSettingsUploadSize as CFNumber
-                }
-            }
+            writer.nullifyGPSData = stripsGeoLocationIfNeeded
             let result = try writer.writeImageSource(source)
             onCompletion(MediaImageExport(url: url,
                                           fileSize: result.fileSize,

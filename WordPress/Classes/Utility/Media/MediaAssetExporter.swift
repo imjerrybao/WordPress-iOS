@@ -5,7 +5,7 @@ import MobileCoreServices
 ///
 class MediaAssetExporter: MediaExporter {
 
-    var resizesIfNeeded = true
+    var maximumImageSize: CGFloat?
     var stripsGeoLocationIfNeeded = true
     var mediaDirectoryType: MediaLibrary.MediaDirectoryType = .uploads
 
@@ -89,11 +89,9 @@ class MediaAssetExporter: MediaExporter {
             options.isNetworkAccessAllowed = true
 
             // Configure the targetSize for PHImageManager to resize to.
-            let mediaSettings = MediaSettings()
-            let settingsMaxSize = mediaSettings.maxImageSizeSetting
             let targetSize: CGSize
-            if resizesIfNeeded && settingsMaxSize < Int.max {
-                targetSize = CGSize(width: settingsMaxSize, height: settingsMaxSize)
+            if let maximumImageSize = maximumImageSize {
+                targetSize = CGSize(width: maximumImageSize, height: maximumImageSize)
             } else {
                 targetSize = PHImageManagerMaximumSize
             }
@@ -120,8 +118,9 @@ class MediaAssetExporter: MediaExporter {
                                     }
                                     // Hand off the image export to a shared image writer.
                                     let exporter = MediaImageExporter()
-                                    exporter.resizesIfNeeded = false
+                                    exporter.maximumImageSize = self.maximumImageSize
                                     exporter.stripsGeoLocationIfNeeded = self.stripsGeoLocationIfNeeded
+                                    exporter.mediaDirectoryType = self.mediaDirectoryType
                                     exporter.exportImage(image,
                                                          fileName: resource.originalFilename,
                                                          onCompletion: { (imageExport) in
@@ -154,7 +153,8 @@ class MediaAssetExporter: MediaExporter {
             }
             // Generate a new URL for the local Media.
             let exportURL = try MediaLibrary.makeLocalMediaURL(withFilename: videoResource.originalFilename,
-                                                               fileExtension: nil)
+                                                               fileExtension: nil,
+                                                               type: mediaDirectoryType)
             // Configure an error handler for the export session.
             let onExportSessionError: (Error?) -> () = { (error) in
                 guard let error = error else {
@@ -213,7 +213,9 @@ class MediaAssetExporter: MediaExporter {
             guard UTTypeEqual(resource.uniformTypeIdentifier as CFString, kUTTypeGIF) else {
                 throw ExportError.expectedPHAssetGIFType
             }
-            let url = try MediaLibrary.makeLocalMediaURL(withFilename: resource.originalFilename, fileExtension: "gif")
+            let url = try MediaLibrary.makeLocalMediaURL(withFilename: resource.originalFilename,
+                                                         fileExtension: "gif",
+                                                         type: mediaDirectoryType)
             let options = PHAssetResourceRequestOptions()
             options.isNetworkAccessAllowed = true
             let manager = PHAssetResourceManager.default()

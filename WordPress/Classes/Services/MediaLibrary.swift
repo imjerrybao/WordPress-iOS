@@ -16,7 +16,11 @@ open class MediaLibrary: LocalCoreDataService {
     ///
     public func makeMediaWith(blog: Blog, asset: PHAsset, onMedia: @escaping (Media) -> (), onError: ((Error) -> ())?) {
         DispatchQueue.global(qos: .default).async {
+
             let exporter = MediaAssetExporter()
+            exporter.maximumImageSize = self.exporterMaximumImageSize()
+            exporter.stripsGeoLocationIfNeeded = MediaSettings().removeLocationSetting
+
             exporter.exportData(forAsset: asset, onCompletion: { (assetExport) in
                 self.managedObjectContext.perform {
 
@@ -46,7 +50,11 @@ open class MediaLibrary: LocalCoreDataService {
     ///
     public func makeMedia(blog: Blog, image: UIImage, onMedia: @escaping (Media) -> (), onError: ((Error) -> ())?) {
         DispatchQueue.global(qos: .default).async {
+
             let exporter = MediaImageExporter()
+            exporter.maximumImageSize = self.exporterMaximumImageSize()
+            exporter.stripsGeoLocationIfNeeded = MediaSettings().removeLocationSetting
+
             exporter.exportImage(image, fileName: nil, onCompletion: { (imageExport) in
                 self.managedObjectContext.perform {
 
@@ -77,6 +85,10 @@ open class MediaLibrary: LocalCoreDataService {
     public func makeMediaWith(blog: Blog, url: URL, onMedia: @escaping (Media) -> (), onError: ((Error) -> ())?) {
         DispatchQueue.global(qos: .default).async {
             let exporter = MediaURLExporter()
+
+            exporter.maximumImageSize = self.exporterMaximumImageSize()
+            exporter.stripsGeoLocationIfNeeded = MediaSettings().removeLocationSetting
+
             exporter.exportURL(fileURL: url, onCompletion: { (urlExport) in
                 self.managedObjectContext.perform {
 
@@ -99,6 +111,18 @@ open class MediaLibrary: LocalCoreDataService {
 
     // MARK: - Media export configurations
 
+    /// Helper method to return an optional value for a valid MediaSettings max image upload size.
+    ///
+    /// - Note: Eventually we'll rewrite MediaSettings.imageSizeForUpload to do this for us, but want to leave
+    ///   that class alone while implementing MediaLibrary.
+    ///
+    fileprivate func exporterMaximumImageSize() -> CGFloat? {
+        let maxUploadSize = MediaSettings().imageSizeForUpload
+        if maxUploadSize < Int.max {
+            return CGFloat(maxUploadSize)
+        }
+        return nil
+    }
 
     /// Configure Media with the AssetExport.
     ///

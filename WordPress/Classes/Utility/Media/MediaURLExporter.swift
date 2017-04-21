@@ -50,10 +50,12 @@ class MediaURLExporter: MediaExporter {
             let typeIdentifier = try typeIdentifierAtURL(fileURL) as CFString
             if UTTypeEqual(typeIdentifier, kUTTypeGIF) {
                 exportGIF(atURL: fileURL, onCompletion: onCompletion, onError: onError)
-            } else if UTTypeConformsTo(typeIdentifier, kUTTypeVideo) {
+            } else if UTTypeConformsTo(typeIdentifier, kUTTypeVideo) || UTTypeConformsTo(typeIdentifier, kUTTypeMovie) {
                 exportVideo(atURL: fileURL, typeIdentifier: typeIdentifier as String, onCompletion: onCompletion, onError: onError)
             } else if UTTypeConformsTo(typeIdentifier, kUTTypeImage) {
                 exportImage(atURL: fileURL, onCompletion: onCompletion, onError: onError)
+            } else {
+                throw ExportError.unknownFileUTI
             }
         } catch {
             onError(exporterErrorWith(error: error))
@@ -100,8 +102,8 @@ class MediaURLExporter: MediaExporter {
                     return
                 }
                 onCompletion(URLExport.exportedVideo(MediaVideoExport(url: mediaURL,
-                                                                      fileSize: session.estimatedOutputFileLength,
-                                                                      duration: session.maxDuration.seconds)))
+                                                                      fileSize: self.fileSizeAtURL(mediaURL),
+                                                                      duration: nil)))
             }
         } catch {
             onError(exporterErrorWith(error: error))

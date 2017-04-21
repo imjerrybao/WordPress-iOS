@@ -10,7 +10,7 @@ class MediaImageExporter: MediaExporter {
     let defaultImageFilename = "image"
 
     var maximumImageSize: CGFloat?
-    var stripsGeoLocationIfNeeded = true
+    var stripsGeoLocationIfNeeded = false
     var mediaDirectoryType: MediaLibrary.MediaDirectoryType = .uploads
 
     public enum ExportError: MediaExportError {

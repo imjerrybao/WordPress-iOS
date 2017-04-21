@@ -6,7 +6,7 @@ import MobileCoreServices
 class MediaURLExporter: MediaExporter {
 
     var maximumImageSize: CGFloat?
-    var stripsGeoLocationIfNeeded = true
+    var stripsGeoLocationIfNeeded = false
     var mediaDirectoryType: MediaLibrary.MediaDirectoryType = .uploads
 
     /// Enumerable type value for a URLExport, typed according to the resulting export of the file at the URL.

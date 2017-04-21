@@ -42,6 +42,7 @@
 		080AAA691E7C63C3004DCD11 /* Media+HTML.m in Sources */ = {isa = PBXBuildFile; fileRef = 080AAA681E7C63C3004DCD11 /* Media+HTML.m */; };
 		080C44A91CE14A9F00B3A02F /* MenuDetailsViewController.m in Sources */ = {isa = PBXBuildFile; fileRef = 080C449E1CE14A9F00B3A02F /* MenuDetailsViewController.m */; };
 		0811B4E71EAAA672003C755F /* test-image-device-photo-gps-portrait.jpg in Resources */ = {isa = PBXBuildFile; fileRef = 0811B4E61EAAA672003C755F /* test-image-device-photo-gps-portrait.jpg */; };
+		0811B4E91EAAB12D003C755F /* test-gif.gif in Resources */ = {isa = PBXBuildFile; fileRef = 0811B4E81EAAB12D003C755F /* test-gif.gif */; };
 		0815CF461E96F22600069916 /* MediaLibrary.swift in Sources */ = {isa = PBXBuildFile; fileRef = 0815CF451E96F22600069916 /* MediaLibrary.swift */; };
 		08216FAA1CDBF95100304BA7 /* MenuItemEditing.storyboard in Resources */ = {isa = PBXBuildFile; fileRef = 08216FA71CDBF95100304BA7 /* MenuItemEditing.storyboard */; };
 		08216FAB1CDBF95100304BA7 /* MenuItemEditingViewController.m in Sources */ = {isa = PBXBuildFile; fileRef = 08216FA91CDBF95100304BA7 /* MenuItemEditingViewController.m */; };
@@ -1098,6 +1099,7 @@
 		080C449D1CE14A9F00B3A02F /* MenuDetailsViewController.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = MenuDetailsViewController.h; sourceTree = "<group>"; };
 		080C449E1CE14A9F00B3A02F /* MenuDetailsViewController.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = MenuDetailsViewController.m; sourceTree = "<group>"; };
 		0811B4E61EAAA672003C755F /* test-image-device-photo-gps-portrait.jpg */ = {isa = PBXFileReference; lastKnownFileType = image.jpeg; path = "test-image-device-photo-gps-portrait.jpg"; sourceTree = "<group>"; };
+		0811B4E81EAAB12D003C755F /* test-gif.gif */ = {isa = PBXFileReference; lastKnownFileType = image.gif; path = "test-gif.gif"; sourceTree = "<group>"; };
 		0815CF451E96F22600069916 /* MediaLibrary.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = MediaLibrary.swift; sourceTree = "<group>"; };
 		08216FA71CDBF95100304BA7 /* MenuItemEditing.storyboard */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = file.storyboard; path = MenuItemEditing.storyboard; sourceTree = "<group>"; };
 		08216FA81CDBF95100304BA7 /* MenuItemEditingViewController.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = MenuItemEditingViewController.h; sourceTree = "<group>"; };
@@ -5077,6 +5079,7 @@
 				08DF9C431E8475530058678C /* test-image-portrait.jpg */,
 				0859CD5D1EA961F5000F369A /* test-image-device-photo-gps.jpg */,
 				0811B4E61EAAA672003C755F /* test-image-device-photo-gps-portrait.jpg */,
+				0811B4E81EAAB12D003C755F /* test-gif.gif */,
 				B5A6BB8B1BF4DF38002F6A96 /* rest-site-settings.json */,
 				E156190016DBABDE006532C4 /* xmlrpc-response-getpost.xml */,
 				E15618FE16DBA983006532C4 /* xmlrpc-response-newpost.xml */,
@@ -5824,6 +5827,7 @@
 				B5EA71381DC294B00083032A /* notifications-load-all.json in Resources */,
 				59F9C1571B9DCE4E00885CC1 /* get-single-theme-v1.1.json in Resources */,
 				933D1F6E1EA7A402009FB462 /* TestAssets.xcassets in Resources */,
+				0811B4E91EAAB12D003C755F /* test-gif.gif in Resources */,
 				FFB8DC9C1CE320C700D4D1B7 /* WordPressComRestApiFailInvalidInput.json in Resources */,
 				B5BC25A41CFCBA6A00F7D8B9 /* people-send-invitation-failure.json in Resources */,
 				B5EFB1D11B33630C007608A3 /* notifications-settings.json in Resources */,

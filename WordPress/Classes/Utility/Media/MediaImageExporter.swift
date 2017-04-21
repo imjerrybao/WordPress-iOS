@@ -20,6 +20,7 @@ class MediaImageExporter: MediaExporter {
         case imageSourceIsAnUnknownType
         case imageSourceExpectedJPEGImageType
         case imageSourceDestinationWithURLFailed
+        case imageSourceThumbnailGenerationFailed
         case imageSourceDestinationWriteFailed
         var description: String {
             switch self {
@@ -29,6 +30,7 @@ class MediaImageExporter: MediaExporter {
                  .imageSourceIsAnUnknownType,
                  .imageSourceExpectedJPEGImageType,
                  .imageSourceDestinationWithURLFailed,
+                 .imageSourceThumbnailGenerationFailed,
                  .imageSourceDestinationWriteFailed:
                 return NSLocalizedString("The image could not be added to the Media Library.", comment: "Message shown when an image failed to load while trying to add it to the Media library.")
             }
@@ -106,7 +108,11 @@ class MediaImageExporter: MediaExporter {
             guard let utType = CGImageSourceGetType(source) else {
                 throw ExportError.imageSourceIsAnUnknownType
             }
-            exportImageSource(source, filename: url.deletingPathExtension().lastPathComponent, type:utType as String, onCompletion: onCompletion, onError: onError)
+            exportImageSource(source,
+                              filename: url.deletingPathExtension().lastPathComponent,
+                              type:utType as String,
+                              onCompletion: onCompletion,
+                              onError: onError)
         } catch {
             onError(exporterErrorWith(error: error))
         }
@@ -134,7 +140,7 @@ class MediaImageExporter: MediaExporter {
             writer.nullifyGPSData = stripsGeoLocationIfNeeded
             let result = try writer.writeImageSource(source)
             onCompletion(MediaImageExport(url: url,
-                                          fileSize: result.fileSize,
+                                          fileSize: fileSizeAtURL(url),
                                           width: result.width,
                                           height: result.height))
         } catch {
@@ -142,7 +148,7 @@ class MediaImageExporter: MediaExporter {
         }
     }
 
-    /// Configureable struct around writing an image to a URL from a CGImageSource via CGImageDestination, particular to the needs of MediaImageExporter.
+    /// Configureable struct for writing an image to a URL from a CGImageSource, via CGImageDestination, particular to the needs of a MediaImageExporter.
     ///
     /// - parameter url: File URL where the image should be written
     /// - parameter sourceUTType: The UTType of the image source
@@ -163,10 +169,10 @@ class MediaImageExporter: MediaExporter {
             self.sourceUTType = sourceUTType
         }
 
+        // Returned result from writing an image, and any properties worth keeping track of.
         struct WriteResultProperties {
             let width: CGFloat?
             let height: CGFloat?
-            let fileSize: Int64?
         }
 
         /// Write a given image source, succeeds unless an error is thrown, returns the resulting properties if available.
@@ -177,43 +183,60 @@ class MediaImageExporter: MediaExporter {
                 throw ExportError.imageSourceDestinationWithURLFailed
             }
 
-            // Configure desired image properties for CGImageDestinationAddImageFromSource
-            var imageProperties: [String: Any] = [:]
-            imageProperties[kCGImageDestinationLossyCompressionQuality as String] = lossyCompressionQuality
+            // Configure image properties for the destination to read or write.
+            // Preserve any existing properties from the source.
+            var imageProperties: [NSString: Any] = (CGImageSourceCopyPropertiesAtIndex(source, 0, nil) as? Dictionary) ?? [:]
+            // Add or modify properties
+            imageProperties[kCGImageDestinationLossyCompressionQuality] = lossyCompressionQuality
 
-            if nullifyGPSData == true {
-                // Not sure if this is all that's required
-                imageProperties[kCGImagePropertyGPSDictionary as String] = kCFNull
-            }
+            var width: CGFloat?
+            var height: CGFloat?
 
-            var sourceImageIndex = 0
             if let maximumSize = maximumSize {
-                // Create a thumbnail of the image source, and use it at the primary image to write to the destination
-                let thumbnailOptions: [String: Any] = [kCGImageSourceThumbnailMaxPixelSize as String: maximumSize]
-                CGImageSourceCreateThumbnailAtIndex(source, 1, thumbnailOptions as CFDictionary)
-                sourceImageIndex = 1
-            }
+                // Configure options for generating the thumbnail, such as the maximum size.
+                let thumbnailOptions: [NSString: Any] = [kCGImageSourceThumbnailMaxPixelSize: maximumSize,
+                                                       kCGImageSourceCreateThumbnailFromImageAlways: true,
+                                                       kCGImageSourceShouldCache: false,
+                                                       kCGImageSourceTypeIdentifierHint: sourceUTType]
+                // Create a thumbnail of the image source.
+                guard let image = CGImageSourceCreateThumbnailAtIndex(source, 0, thumbnailOptions as CFDictionary) else {
+                    throw ExportError.imageSourceThumbnailGenerationFailed
+                }
 
-            CGImageDestinationAddImageFromSource(destination,
-                                                 source,
-                                                 sourceImageIndex,
-                                                 imageProperties as CFDictionary)
+                if nullifyGPSData == true {
+                    // When removing GPS data for a thumbnail, we have to remove the dictionary
+                    // itself for the CGImageDestinationAddImage method.
+                    imageProperties.removeValue(forKey: kCGImagePropertyGPSDictionary)
+                }
+                // Add the thumbnail image as the destination's image.
+                CGImageDestinationAddImage(destination, image, imageProperties as CFDictionary?)
+
+                // Get the dimensions from the CGImage itself
+                width = CGFloat(image.width)
+                height = CGFloat(image.height)
+            } else {
+
+                if nullifyGPSData == true {
+                    // When removing GPS data for a full-sized image, we have to nullify the GPS dictionary
+                    // for the CGImageDestinationAddImageFromSource method.
+                    imageProperties[kCGImagePropertyGPSDictionary] = kCFNull
+                }
+                // No resizing needed, add the full sized image from the source
+                CGImageDestinationAddImageFromSource(destination, source, 0, imageProperties as CFDictionary?)
+
+                // Get the dimensions of the full size image from the source's properties
+                width = imageProperties[kCGImagePropertyPixelWidth] as? CGFloat
+                height = imageProperties[kCGImagePropertyPixelHeight] as? CGFloat
+            }
 
             // Write the image to the file URL
             let written = CGImageDestinationFinalize(destination)
             guard written == true else {
                 throw ExportError.imageSourceDestinationWriteFailed
             }
-
-            let sourceProperties = CGImageSourceCopyPropertiesAtIndex(source, 0, nil) as? Dictionary<String, AnyObject>
-
-            let width: CGFloat? = sourceProperties?[kCGImagePropertyPixelWidth as String] as? CGFloat
-            let height: CGFloat? = sourceProperties?[kCGImagePropertyPixelHeight as String] as? CGFloat
-            let fileSize: Int64? = sourceProperties?[kCGImagePropertyFileSize as String] as? Int64
-
+            // Return the result with any interesting properties.
             return WriteResultProperties(width: width,
-                                         height: height,
-                                         fileSize: fileSize)
+                                         height: height)
         }
     }
 }

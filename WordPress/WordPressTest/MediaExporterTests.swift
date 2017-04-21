@@ -76,6 +76,35 @@ class MediaExporterTests: XCTestCase {
         waitForExpectations(timeout: 2.0, handler: nil)
     }
 
+    func testThatImageExportingWithMaximumSizeLargerThanTheImageWorks() {
+        guard let mediaPath = OHPathForFile("test-image-device-photo-gps.jpg", type(of: self)) else {
+            XCTAssert(false, "Error: failed creating a path to the test image file")
+            return
+        }
+        guard let image = UIImage(contentsOfFile: mediaPath) else {
+            XCTFail("Error: an error occurred initializing the test image for export")
+            return
+        }
+        let expect = self.expectation(description: "image export with a maximum size larger than the image's size")
+        let exporter = MediaImageExporter()
+        let expectedSize = max(image.size.width, image.size.height)
+        let maximumImageSize = expectedSize + 200
+        exporter.mediaDirectoryType = .temporary
+        exporter.maximumImageSize = maximumImageSize
+        exporter.stripsGeoLocationIfNeeded = false
+        exporter.exportImage(image,
+                             fileName: nil,
+                             onCompletion: { (imageExport) in
+                                self.validateImageExport(imageExport, withExpectedSize: expectedSize)
+                                self.cleanUpExportedMedia(atURL: imageExport.url)
+                                expect.fulfill()
+        }) { (error) in
+            XCTFail("Error: an error occurred testing an image export with a maximum size larger than the image's size: \(error.toNSError())")
+            expect.fulfill()
+        }
+        waitForExpectations(timeout: 2.0, handler: nil)
+    }
+
     fileprivate func validateImageExport(_ imageExport: MediaImageExport, withExpectedSize expectedSize: CGFloat) {
         guard let image = UIImage(contentsOfFile: imageExport.url.path) else {
             XCTFail("Error: an error occurred checking the image from an export")
@@ -219,6 +248,109 @@ class MediaExporterTests: XCTestCase {
         if properties[kCGImagePropertyGPSDictionary as String] == nil {
             XCTFail("Error: did not find expected GPS properties when reading an exported image source's properties")
         }
+    }
+
+    // MARK: - Image export orientation testing
+
+    func testExportingAPortraitImageAndCorrectingTheOrientationWorks() {
+        guard let mediaPath = OHPathForFile("test-image-portrait.jpg", type(of: self)) else {
+            XCTAssert(false, "Error: failed creating a path to the test image file")
+            return
+        }
+        guard let image = UIImage(contentsOfFile: mediaPath) else {
+            XCTFail("Error: an error occurred initializing the test image for export")
+            return
+        }
+        if image.imageOrientation != .leftMirrored {
+            XCTFail("Error: the test portrait image was not in the expected orientation, expected: \(UIImageOrientation.leftMirrored.rawValue) but read: \(image.imageOrientation.rawValue)")
+            return
+        }
+        let expect = self.expectation(description: "image export by UIImage and correcting the orientation")
+        let exporter = MediaImageExporter()
+        exporter.mediaDirectoryType = .temporary
+        exporter.stripsGeoLocationIfNeeded = false
+        exporter.exportImage(image,
+                             fileName: nil,
+                             onCompletion: { (imageExport) in
+                                self.validateImageExportedWithExpectedOrientation(export: imageExport, expected: .up)
+                                self.cleanUpExportedMedia(atURL: imageExport.url)
+                                expect.fulfill()
+        }) { (error) in
+            XCTFail("Error: an error occurred testing an image export: \(error.toNSError())")
+            expect.fulfill()
+        }
+        waitForExpectations(timeout: 2.0, handler: nil)
+    }
+
+    func testExportingAPortraitImageAndCorrectingTheOrientationWhileResizingWorks() {
+        guard let mediaPath = OHPathForFile("test-image-portrait.jpg", type(of: self)) else {
+            XCTAssert(false, "Error: failed creating a path to the test image file")
+            return
+        }
+        guard let image = UIImage(contentsOfFile: mediaPath) else {
+            XCTFail("Error: an error occurred initializing the test image for export")
+            return
+        }
+        if image.imageOrientation != .leftMirrored {
+            XCTFail("Error: the test portrait image was not in the expected orientation, expected: \(UIImageOrientation.leftMirrored.rawValue) but read: \(image.imageOrientation.rawValue)")
+            return
+        }
+        let expect = self.expectation(description: "image export by UIImage and correcting the orientation with resizing")
+        let exporter = MediaImageExporter()
+        let maximumImageSize = CGFloat(200)
+        exporter.mediaDirectoryType = .temporary
+        exporter.stripsGeoLocationIfNeeded = false
+        exporter.maximumImageSize = maximumImageSize
+        exporter.exportImage(image,
+                             fileName: nil,
+                             onCompletion: { (imageExport) in
+                                self.validateImageExportedWithExpectedOrientation(export: imageExport, expected: .up)
+                                self.validateImageExport(imageExport, withExpectedSize: maximumImageSize)
+                                self.cleanUpExportedMedia(atURL: imageExport.url)
+                                expect.fulfill()
+        }) { (error) in
+            XCTFail("Error: an error occurred testing an image export: \(error.toNSError())")
+            expect.fulfill()
+        }
+        waitForExpectations(timeout: 2.0, handler: nil)
+    }
+
+    func testExportingAPortraitImageAndCorrectingTheOrientationWhileResizingAndStrippingGPSWorks() {
+        guard let mediaPath = OHPathForFile("test-image-device-photo-gps-portrait.jpg", type(of: self)) else {
+            XCTAssert(false, "Error: failed creating a path to the test image file")
+            return
+        }
+        guard let image = UIImage(contentsOfFile: mediaPath) else {
+            XCTFail("Error: an error occurred initializing the test image for export")
+            return
+        }
+        let expect = self.expectation(description: "image export by UIImage and correcting the orientation with resizing and stripping GPS")
+        let exporter = MediaImageExporter()
+        let maximumImageSize = CGFloat(200)
+        exporter.mediaDirectoryType = .temporary
+        exporter.stripsGeoLocationIfNeeded = true
+        exporter.maximumImageSize = maximumImageSize
+        exporter.exportImage(image,
+                             fileName: nil,
+                             onCompletion: { (imageExport) in
+                                self.validateImageExportedWithExpectedOrientation(export: imageExport, expected: .up)
+                                self.validateImageExportStrippedGPS(imageExport)
+                                self.validateImageExport(imageExport, withExpectedSize: maximumImageSize)
+                                self.cleanUpExportedMedia(atURL: imageExport.url)
+                                expect.fulfill()
+        }) { (error) in
+            XCTFail("Error: an error occurred testing an image export: \(error.toNSError())")
+            expect.fulfill()
+        }
+        waitForExpectations(timeout: 2.0, handler: nil)
+    }
+
+    fileprivate func validateImageExportedWithExpectedOrientation(export: MediaImageExport, expected: UIImageOrientation) {
+        guard let image = UIImage(contentsOfFile: export.url.path) else {
+            XCTFail("Error: an error occurred initializing the exported image for validation")
+            return
+        }
+        XCTAssert(image.imageOrientation == expected, "Error: the exported image's orientation (\(image.imageOrientation.rawValue)) did not match the expected orientation (\(expected.rawValue))")
     }
 
     // MARK: - Image export testing cleanup

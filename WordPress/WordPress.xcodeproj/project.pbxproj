@@ -79,6 +79,8 @@
 		0859DCFB1CB8482200EB4069 /* MenusServiceRemote.m in Sources */ = {isa = PBXBuildFile; fileRef = 0859DCFA1CB8482200EB4069 /* MenusServiceRemote.m */; };
 		0859DCFD1CB8488400EB4069 /* MenusServiceRemoteTests.m in Sources */ = {isa = PBXBuildFile; fileRef = 0859DCFC1CB8488400EB4069 /* MenusServiceRemoteTests.m */; };
 		086650651EA1841D00DC4B44 /* MediaURLExporter.swift in Sources */ = {isa = PBXBuildFile; fileRef = 086650641EA1841D00DC4B44 /* MediaURLExporter.swift */; };
+		0868D5EE1EAABC3B00EBEAD2 /* MediaImageExporterTests.swift in Sources */ = {isa = PBXBuildFile; fileRef = 0868D5ED1EAABC3B00EBEAD2 /* MediaImageExporterTests.swift */; };
+		0868D5F01EAABC7C00EBEAD2 /* MediaURLExporterTests.swift in Sources */ = {isa = PBXBuildFile; fileRef = 0868D5EF1EAABC7C00EBEAD2 /* MediaURLExporterTests.swift */; };
 		086C4D101E81F9240011D960 /* Media+Blog.swift in Sources */ = {isa = PBXBuildFile; fileRef = 086C4D0F1E81F9240011D960 /* Media+Blog.swift */; };
 		086E1FE01BBB35D2002D86CA /* MenusViewController.m in Sources */ = {isa = PBXBuildFile; fileRef = 086E1FDF1BBB35D2002D86CA /* MenusViewController.m */; };
 		0879FC161E9301DD00E1EFC8 /* MediaTests.swift in Sources */ = {isa = PBXBuildFile; fileRef = 0879FC151E9301DD00E1EFC8 /* MediaTests.swift */; };
@@ -1183,6 +1185,8 @@
 		0859DCFA1CB8482200EB4069 /* MenusServiceRemote.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = MenusServiceRemote.m; sourceTree = "<group>"; };
 		0859DCFC1CB8488400EB4069 /* MenusServiceRemoteTests.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = MenusServiceRemoteTests.m; sourceTree = "<group>"; };
 		086650641EA1841D00DC4B44 /* MediaURLExporter.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; name = MediaURLExporter.swift; path = Classes/Utility/Media/MediaURLExporter.swift; sourceTree = SOURCE_ROOT; };
+		0868D5ED1EAABC3B00EBEAD2 /* MediaImageExporterTests.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = MediaImageExporterTests.swift; sourceTree = "<group>"; };
+		0868D5EF1EAABC7C00EBEAD2 /* MediaURLExporterTests.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = MediaURLExporterTests.swift; sourceTree = "<group>"; };
 		086C4D0F1E81F9240011D960 /* Media+Blog.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = "Media+Blog.swift"; sourceTree = "<group>"; };
 		086E1FDE1BBB35D2002D86CA /* MenusViewController.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = MenusViewController.h; sourceTree = "<group>"; };
 		086E1FDF1BBB35D2002D86CA /* MenusViewController.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = MenusViewController.m; sourceTree = "<group>"; };
@@ -2912,6 +2916,8 @@
 			isa = PBXGroup;
 			children = (
 				08DD30AA1EA819B600B9EFA5 /* MediaExporterTests.swift */,
+				0868D5ED1EAABC3B00EBEAD2 /* MediaImageExporterTests.swift */,
+				0868D5EF1EAABC7C00EBEAD2 /* MediaURLExporterTests.swift */,
 			);
 			name = Media;
 			sourceTree = "<group>";
@@ -6993,6 +6999,7 @@
 				26A1B5A01DDB6FC1007BDAC0 /* ReaderSiteServiceRemoteTests.swift in Sources */,
 				B556EFCB1DCA374200728F93 /* DictionaryHelpersTests.swift in Sources */,
 				F1564E5B18946087009F8F97 /* NSStringHelpersTests.m in Sources */,
+				0868D5F01EAABC7C00EBEAD2 /* MediaURLExporterTests.swift in Sources */,
 				08A2AD791CCED2A800E84454 /* PostTagServiceTests.m in Sources */,
 				E10F3DA11E5C2CE0008FAADA /* PostListFilterTests.swift in Sources */,
 				93EF094C19ED533500C89770 /* ContextManagerTests.swift in Sources */,
@@ -7002,6 +7009,7 @@
 				85F8E19B1B017AA6000859BB /* PushAuthenticationServiceRemoteTests.swift in Sources */,
 				E63C89741CB99A8500649C8F /* SigninHelperTests.swift in Sources */,
 				E1C545801C6C79BB001CEB0E /* MediaSettingsTests.swift in Sources */,
+				0868D5EE1EAABC3B00EBEAD2 /* MediaImageExporterTests.swift in Sources */,
 				59FBD5621B5684F300734466 /* ThemeServiceTests.m in Sources */,
 				85F8E19D1B018698000859BB /* PushAuthenticationServiceTests.swift in Sources */,
 				261FF32C1DDCF58900695BD5 /* MediaServiceRemoteRESTTests.swift in Sources */,

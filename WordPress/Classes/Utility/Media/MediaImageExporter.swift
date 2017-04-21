@@ -183,12 +183,25 @@ class MediaImageExporter: MediaExporter {
                 throw ExportError.imageSourceDestinationWithURLFailed
             }
 
-            // Configure image properties for the destination to read or write.
+            // Configure image properties for the image source and image destination methods
             // Preserve any existing properties from the source.
             var imageProperties: [NSString: Any] = (CGImageSourceCopyPropertiesAtIndex(source, 0, nil) as? Dictionary) ?? [:]
-            // Add or modify properties
+            // Configure destination properties
             imageProperties[kCGImageDestinationLossyCompressionQuality] = lossyCompressionQuality
+            // Configure orientation properties to default .up or 1
+            imageProperties[kCGImagePropertyOrientation] = CGImagePropertyOrientation.up
+            if var tiffProperties = imageProperties[kCGImagePropertyTIFFDictionary] as? [NSString: Any] {
+                // Remove TIFF orientation value
+                tiffProperties.removeValue(forKey: kCGImagePropertyTIFFOrientation)
+                imageProperties[kCGImagePropertyTIFFDictionary] = tiffProperties
+            }
+            if var iptcProperties = imageProperties[kCGImagePropertyIPTCImageOrientation] as? [NSString: Any] {
+                // Remove IPTC orientation value
+                iptcProperties.removeValue(forKey: kCGImagePropertyIPTCImageOrientation)
+                imageProperties[kCGImagePropertyIPTCImageOrientation] = iptcProperties
+            }
 
+            // Keep track of the image's width and height
             var width: CGFloat?
             var height: CGFloat?
 
@@ -197,7 +210,8 @@ class MediaImageExporter: MediaExporter {
                 let thumbnailOptions: [NSString: Any] = [kCGImageSourceThumbnailMaxPixelSize: maximumSize,
                                                        kCGImageSourceCreateThumbnailFromImageAlways: true,
                                                        kCGImageSourceShouldCache: false,
-                                                       kCGImageSourceTypeIdentifierHint: sourceUTType]
+                                                       kCGImageSourceTypeIdentifierHint: sourceUTType,
+                                                       kCGImageSourceCreateThumbnailWithTransform: true]
                 // Create a thumbnail of the image source.
                 guard let image = CGImageSourceCreateThumbnailAtIndex(source, 0, thumbnailOptions as CFDictionary) else {
                     throw ExportError.imageSourceThumbnailGenerationFailed
@@ -208,6 +222,7 @@ class MediaImageExporter: MediaExporter {
                     // itself for the CGImageDestinationAddImage method.
                     imageProperties.removeValue(forKey: kCGImagePropertyGPSDictionary)
                 }
+
                 // Add the thumbnail image as the destination's image.
                 CGImageDestinationAddImage(destination, image, imageProperties as CFDictionary?)
 

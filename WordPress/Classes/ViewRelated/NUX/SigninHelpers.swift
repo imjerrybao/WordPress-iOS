@@ -46,7 +46,7 @@ import Mixpanel
         }
 
         let storyboard = UIStoryboard(name: "Login", bundle: nil)
-        if let controller = storyboard.instantiateInitialViewController() as? LoginNavigationController {
+        if let controller = storyboard.instantiateInitialViewController() as? UIViewController {
             presenter.present(controller, animated: animated, completion: nil)
         }
     }
